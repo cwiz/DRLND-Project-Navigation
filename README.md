@@ -1,56 +1,140 @@
-[//]: # (Image References)
-
-[image1]: https://user-images.githubusercontent.com/10624937/42135619-d90f2f28-7d12-11e8-8823-82b970a54d7e.gif "Trained Agent"
-
 # Project 1: Navigation
 
-### Introduction
+**Sergei Surovtsev**
+<br/>
+Udacity Deep Reinforcement Learning Nanodegree
+<br/>
+Class of May 2019
 
-For this project, you will train an agent to navigate (and collect bananas!) in a large, square world.  
+## Project Description
 
-![Trained Agent][image1]
+This project is introduction to Deep Reinforcement Learning. It involves implementing Deep-Q-Learning algorithm in two different flavors: with fully-observable state and from raw pixels.
 
-A reward of +1 is provided for collecting a yellow banana, and a reward of -1 is provided for collecting a blue banana.  Thus, the goal of your agent is to collect as many yellow bananas as possible while avoiding blue bananas.  
+We are given a simulator of 3D world where an agent need to collect bananas. Our goal is to collect yellow bananas and ignore blue bananas. 
 
-The state space has 37 dimensions and contains the agent's velocity, along with ray-based perception of objects around agent's forward direction.  Given this information, the agent has to learn how to best select actions.  Four discrete actions are available, corresponding to:
-- **`0`** - move forward.
-- **`1`** - move backward.
-- **`2`** - turn left.
-- **`3`** - turn right.
+In first flavor a state space consists of 37 dimensions and with raw pixel flavor we are given 84-by-84 px 3 channel image.
 
-The task is episodic, and in order to solve the environment, your agent must get an average score of +13 over 100 consecutive episodes.
+Control space consists of 4 dimensions. 
 
-### Getting Started
+## Project Goals
 
-1. Download the environment from one of the links below.  You need only select the environment that matches your operating system:
-    - Linux: [click here](https://s3-us-west-1.amazonaws.com/udacity-drlnd/P1/Banana/Banana_Linux.zip)
-    - Mac OSX: [click here](https://s3-us-west-1.amazonaws.com/udacity-drlnd/P1/Banana/Banana.app.zip)
-    - Windows (32-bit): [click here](https://s3-us-west-1.amazonaws.com/udacity-drlnd/P1/Banana/Banana_Windows_x86.zip)
-    - Windows (64-bit): [click here](https://s3-us-west-1.amazonaws.com/udacity-drlnd/P1/Banana/Banana_Windows_x86_64.zip)
-    
-    (_For Windows users_) Check out [this link](https://support.microsoft.com/en-us/help/827218/how-to-determine-whether-a-computer-is-running-a-32-bit-version-or-64) if you need help with determining if your computer is running a 32-bit version or 64-bit version of the Windows operating system.
+* Introduction to Deep Reinforcement Learning
+* Introduction to DQL-algorithm
 
-    (_For AWS_) If you'd like to train the agent on AWS (and have not [enabled a virtual screen](https://github.com/Unity-Technologies/ml-agents/blob/master/docs/Training-on-Amazon-Web-Service.md)), then please use [this link](https://s3-us-west-1.amazonaws.com/udacity-drlnd/P1/Banana/Banana_Linux_NoVis.zip) to obtain the environment.
+## Technical Formulation of Problem 
 
-2. Place the file in the DRLND GitHub repository, in the `p1_navigation/` folder, and unzip (or decompress) the file. 
+* Set up environment as described in [Project Repository](https://github.com/udacity/deep-reinforcement-learning/tree/master/p1_navigation)
+* Complete Navigation.ipynb for complete state-space flavor
+* [Optional] Complete Navigation_Pixels.ipynb
 
-### Instructions
+## Mathematical Models
 
-Follow the instructions in `Navigation.ipynb` to get started with training your own agent!  
+In this project we are implementing Deep-Q-Learning (DQL) algorithm, that a variant of Temporal Difference (TD) learning. Key advantages of it that it is (1) Model-free (does not need model of underlying world, dynamics or rewards) and uses bootstrapping to estimate value function. 
 
-### (Optional) Challenge: Learning from Pixels
+DQN algorithm can be implemented as follows:
 
-After you have successfully completed the project, if you're looking for an additional challenge, you have come to the right place!  In the project, your agent learned from information such as its velocity, along with ray-based perception of objects around its forward direction.  A more challenging task would be to learn directly from pixels!
+![segmentation-obstacles](https://github.com/cwiz/DRLND-Project-Navigation/blob/master/images/dqn.png?raw=true "DQN")
 
-To solve this harder task, you'll need to download a new Unity environment.  This environment is almost identical to the project environment, where the only difference is that the state is an 84 x 84 RGB image, corresponding to the agent's first-person view.  (**Note**: Udacity students should not submit a project with this new environment.)
+In classical formulation for Q-Learning we use table (matrix) to estimate (quantized) state-action function. In DQN flavor we use neural network for it.
 
-You need only select the environment that matches your operating system:
-- Linux: [click here](https://s3-us-west-1.amazonaws.com/udacity-drlnd/P1/Banana/VisualBanana_Linux.zip)
-- Mac OSX: [click here](https://s3-us-west-1.amazonaws.com/udacity-drlnd/P1/Banana/VisualBanana.app.zip)
-- Windows (32-bit): [click here](https://s3-us-west-1.amazonaws.com/udacity-drlnd/P1/Banana/VisualBanana_Windows_x86.zip)
-- Windows (64-bit): [click here](https://s3-us-west-1.amazonaws.com/udacity-drlnd/P1/Banana/VisualBanana_Windows_x86_64.zip)
+### NN for DQN with fully observable state
 
-Then, place the file in the `p1_navigation/` folder in the DRLND GitHub repository, and unzip (or decompress) the file.  Next, open `Navigation_Pixels.ipynb` and follow the instructions to learn how to use the Python API to control the agent.
+```python
+class QNetwork(nn.Module):
+    """Actor (Policy) Model."""
 
-(_For AWS_) If you'd like to train the agent on AWS, you must follow the instructions to [set up X Server](https://github.com/Unity-Technologies/ml-agents/blob/master/docs/Training-on-Amazon-Web-Service.md), and then download the environment for the **Linux** operating system above.
-# DRLND-Project-Navigation
+    def __init__(self, state_size, action_size, seed, fc1_units=64, fc2_units=64):
+        """Initialize parameters and build model.
+        Params
+        ======
+            state_size (int): Dimension of each state
+            action_size (int): Dimension of each action
+            seed (int): Random seed
+            fc1_units (int): Number of nodes in first hidden layer
+            fc2_units (int): Number of nodes in second hidden layer
+        """
+        super(QNetwork, self).__init__()
+        self.seed = torch.manual_seed(seed)
+        self.fc1 = nn.Linear(state_size, fc1_units)
+        self.fc2 = nn.Linear(fc1_units, fc2_units)
+        self.fc3 = nn.Linear(fc2_units, action_size)
+
+    def forward(self, state):
+        """Build a network that maps state -> action values."""
+        x = F.relu(self.fc1(state))
+        x = F.relu(self.fc2(x))
+        return self.fc3(x)
+```
+
+### NN for DQN with raw pixels
+
+```python
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+
+class QNetwork(nn.Module):
+    """Actor (Policy) Model."""
+
+    def __init__(self, action_size, seed, fc1_units=64, fc2_units=64):
+        """Initialize parameters and build model.
+        Params
+        ======
+            action_size (int): Dimension of each action
+            seed (int): Random seed
+            fc1_units (int): Number of nodes in first hidden layer
+            fc2_units (int): Number of nodes in second hidden layer
+        """
+        super(QNetwork, self).__init__()
+
+        self.seed = torch.manual_seed(seed)
+        self.conv1 = nn.Conv2d(3, 32, kernel_size = 8, stride = 4)
+        self.conv2 = nn.Conv2d(32, 64, 4, 2)
+        self.conv3 = nn.Conv2d(64, 64, 3, 1)
+        self.fc4 = nn.Linear(7 * 7 * 64, 512)
+        self.fc5 = nn.Linear(512, action_size)
+
+    def forward(self, x):
+        """Build a network that maps state -> action values."""
+        x = x.reshape(-1, 3, 84, 84)
+        x = F.relu(self.conv1(x))
+        x = F.relu(self.conv2(x))
+        x = F.relu(self.conv3(x))
+        x = F.relu(self.fc4(x.view(x.size(0), -1)))
+        return self.fc5(x)
+```
+
+### Results
+
+#### DQN from fully observable state
+
+Converges to avg score ~ 13 around 700 episode.
+
+```
+Episode 100	Average Score: 0.53
+Episode 200	Average Score: 2.08
+Episode 300	Average Score: 5.25
+Episode 400	Average Score: 7.69
+Episode 500	Average Score: 10.35
+Episode 600	Average Score: 12.78
+Episode 700	Average Score: 13.20
+Episode 800	Average Score: 13.09
+Episode 900	Average Score: 13.04
+Episode 1000	Average Score: 13.04
+Episode 1100	Average Score: 12.94
+Episode 1200	Average Score: 13.06
+Episode 1300	Average Score: 12.93
+Episode 1400	Average Score: 12.91
+Episode 1500	Average Score: 13.20
+Episode 1600	Average Score: 12.96
+Episode 1700	Average Score: 13.12
+Episode 1800	Average Score: 13.13
+Episode 1900	Average Score: 12.58
+Episode 2000	Average Score: 12.35
+```
+
+![DQN-1](https://github.com/cwiz/DRLND-Project-Navigation/blob/master/images/variant-1.png?raw=true "DQN")
+
+#### DQN from raw pixels
+
+(in progress)
