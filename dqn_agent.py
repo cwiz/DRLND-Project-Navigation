@@ -104,9 +104,12 @@ class Agent():
             Q_targets_next = self.qnetwork_target.forward(next_states).detach()
             _a = tuple([(i, j) for i, j in enumerate(list(index))])
             Q_targets_next = torch.stack([Q_targets_next[i] for i in _a])
+            Q_targets_next = Q_targets_next.view(Q_targets_next.shape[0], 1)
         
         Q_targets = rewards + gamma * Q_targets_next * (1 - dones)
         Q_expected = self.qnetwork_local(states).gather(1, actions)
+
+        print(Q_expected.shape)
         
         loss = F.mse_loss(Q_expected, Q_targets)
         
