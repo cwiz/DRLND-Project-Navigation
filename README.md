@@ -81,7 +81,7 @@ Q_targets_next = torch.stack([Q_targets_next[i] for i in _a])
 
 #### Vanilla DQN
 
-Converges to avg score ~ 13 around 700 episode.
+Converges to avg score ~ 13 around 700 episode, highscore 13.20
 
 ```
 Episode 100	Average Score: 0.53
@@ -110,4 +110,29 @@ Episode 2000	Average Score: 12.35
 
 #### Double DQN
 
-(in progress)
+Converges to avg score ~ 13 around 600 episode, highscore 16.
+
+```
+Episode 100	Average Score: 0.24
+Episode 200	Average Score: 1.56
+Episode 300	Average Score: 4.72
+Episode 400	Average Score: 8.30
+Episode 500	Average Score: 11.49
+Episode 600	Average Score: 13.21
+Episode 700	Average Score: 13.66
+Episode 800	Average Score: 14.62
+Episode 900	Average Score: 15.38
+Episode 1000	Average Score: 15.57
+Episode 1100	Average Score: 15.84
+Episode 1200	Average Score: 15.62
+Episode 1300	Average Score: 15.82
+Episode 1400	Average Score: 15.89
+Episode 1500	Average Score: 15.84
+Episode 1600	Average Score: 15.88
+Episode 1700	Average Score: 15.85
+Episode 1800	Average Score: 16.14
+Episode 1900	Average Score: 15.80
+Episode 2000	Average Score: 15.17
+```
+
+![DQN-1](https://github.com/cwiz/DRLND-Project-Navigation/blob/master/images/variant-1.png?raw=true "Double DQN")
