@@ -37,7 +37,7 @@ DQN algorithm can be implemented as follows:
 
 In classical formulation for Q-Learning we use table (matrix) to estimate (quantized) state-action function. In DQN flavor we use neural network for it.
 
-### NN for DQN with fully observable state
+### Vanilla DQN
 
 ```python
 class QNetwork(nn.Module):
@@ -66,47 +66,20 @@ class QNetwork(nn.Module):
         return self.fc3(x)
 ```
 
-### NN for DQN with raw pixels
+### Double DQN
+
+A slight change in how Q_targets_next improves performance. Intuition here that this simple trick improves convergence (indexing live network by argmax of frozen)
 
 ```python
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
-
-class QNetwork(nn.Module):
-    """Actor (Policy) Model."""
-
-    def __init__(self, action_size, seed, fc1_units=64, fc2_units=64):
-        """Initialize parameters and build model.
-        Params
-        ======
-            action_size (int): Dimension of each action
-            seed (int): Random seed
-            fc1_units (int): Number of nodes in first hidden layer
-            fc2_units (int): Number of nodes in second hidden layer
-        """
-        super(QNetwork, self).__init__()
-
-        self.seed = torch.manual_seed(seed)
-        self.conv1 = nn.Conv2d(3, 32, kernel_size = 8, stride = 4)
-        self.conv2 = nn.Conv2d(32, 64, 4, 2)
-        self.conv3 = nn.Conv2d(64, 64, 3, 1)
-        self.fc4 = nn.Linear(7 * 7 * 64, 512)
-        self.fc5 = nn.Linear(512, action_size)
-
-    def forward(self, x):
-        """Build a network that maps state -> action values."""
-        x = x.reshape(-1, 3, 84, 84)
-        x = F.relu(self.conv1(x))
-        x = F.relu(self.conv2(x))
-        x = F.relu(self.conv3(x))
-        x = F.relu(self.fc4(x.view(x.size(0), -1)))
-        return self.fc5(x)
+index = self.qnetwork_local.forward(next_states).detach().argmax(1)
+Q_targets_next = self.qnetwork_target.forward(next_states).detach()
+_a = tuple([(i, j) for i, j in enumerate(list(index))])
+Q_targets_next = torch.stack([Q_targets_next[i] for i in _a])
 ```
 
 ### Results
 
-#### DQN from fully observable state
+#### Vanilla DQN
 
 Converges to avg score ~ 13 around 700 episode.
 
@@ -135,6 +108,6 @@ Episode 2000	Average Score: 12.35
 
 ![DQN-1](https://github.com/cwiz/DRLND-Project-Navigation/blob/master/images/variant-1.png?raw=true "DQN")
 
-#### DQN from raw pixels
+#### Double DQN
 
 (in progress)
