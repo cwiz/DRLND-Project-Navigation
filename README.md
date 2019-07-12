@@ -135,4 +135,31 @@ Episode 1900	Average Score: 15.80
 Episode 2000	Average Score: 15.17
 ```
 
-![DQN-1](https://github.com/cwiz/DRLND-Project-Navigation/blob/master/images/variant-1.png?raw=true "Double DQN")
+![DQN-2](https://github.com/cwiz/DRLND-Project-Navigation/blob/master/images/variant-2.png?raw=true "Double DQN")
+
+#### Double DQN + Prioritized Experience Replay
+
+```
+Episode 100	Average Score: 0.28
+Episode 200	Average Score: 1.47
+Episode 300	Average Score: 4.67
+Episode 400	Average Score: 8.25
+Episode 500	Average Score: 10.61
+Episode 600	Average Score: 11.93
+Episode 700	Average Score: 12.71
+Episode 800	Average Score: 12.37
+Episode 900	Average Score: 12.09
+Episode 1000	Average Score: 12.27
+Episode 1100	Average Score: 12.29
+Episode 1200	Average Score: 12.53
+Episode 1300	Average Score: 12.54
+Episode 1400	Average Score: 12.88
+Episode 1500	Average Score: 13.11
+Episode 1600	Average Score: 12.41
+Episode 1700	Average Score: 12.06
+Episode 1800	Average Score: 11.77
+Episode 1900	Average Score: 11.02
+Episode 2000	Average Score: 11.21
+```
+
+![DQN-3](https://github.com/cwiz/DRLND-Project-Navigation/blob/master/images/variant-3.png?raw=true "Double DQN + PER")
