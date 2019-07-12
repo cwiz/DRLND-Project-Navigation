@@ -139,6 +139,8 @@ Episode 2000	Average Score: 15.17
 
 #### Double DQN + Prioritized Experience Replay
 
+Average score gets to peak 12.88 around 1400 episode then decreases to 11. This artifact is probably due to bad hyperparameter b (pow(b)) used to update model weights. Note how this variant has higher score variance.
+
 ```
 Episode 100	Average Score: 0.28
 Episode 200	Average Score: 1.47
