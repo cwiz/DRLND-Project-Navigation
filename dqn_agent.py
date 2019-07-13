@@ -4,7 +4,7 @@ import random
 from collections import namedtuple, deque
 from recordtype import recordtype
 
-from model import QNetwork
+from model import QNetwork, DuelingQNetwork
 
 import torch
 import torch.nn.functional as F
@@ -22,7 +22,7 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 class Agent():
     """Interacts with and learns from the environment."""
 
-    def __init__(self, state_size, action_size, seed, flavor="vanilla", priority_replay=False):
+    def __init__(self, state_size, action_size, seed, double=False, dueling=False, priority_replay=False):
         """Initialize an Agent object.
         
         Params
@@ -35,9 +35,19 @@ class Agent():
         self.action_size = action_size
         self.seed = random.seed(seed)
 
-        # Q-Network
-        self.qnetwork_local = QNetwork(state_size, action_size, seed).to(device)
-        self.qnetwork_target = QNetwork(state_size, action_size, seed).to(device)
+        # Double QNS
+        self.double = double
+        self.batch_indices = torch.arange(0, BATCH_SIZE)
+
+        # Q-Network or Dueling Q Network
+        self.dueling = dueling
+        net = QNetwork
+        if self.dueling:
+            net = DuelingQNetwork
+        
+        self.qnetwork_local = net(state_size, action_size, seed).to(device)
+        self.qnetwork_target = net(state_size, action_size, seed).to(device)
+        
         self.optimizer = optim.Adam(self.qnetwork_local.parameters(), lr=LR)
 
         # Replay memory
@@ -49,7 +59,6 @@ class Agent():
         
         # Initialize time step (for updating every UPDATE_EVERY steps)
         self.t_step = 0
-        self.flavor = flavor
     
     def step(self, state, action, reward, next_state, done):
         # Save experience in replay memory
@@ -97,16 +106,14 @@ class Agent():
         "*** YOUR CODE HERE ***"
 
         # Vanilla DQN
-        if self.flavor == "vanilla":
+        if not self.double:
             Q_targets_next = self.qnetwork_target.forward(next_states).detach().max(1)[0].unsqueeze(1)
 
         # Double DQN
-        if self.flavor == "double":
-            index = self.qnetwork_local.forward(next_states).detach().argmax(1)
-            Q_targets_next = self.qnetwork_target.forward(next_states).detach()
-            _a = tuple([(i, j) for i, j in enumerate(list(index))])
-            Q_targets_next = torch.stack([Q_targets_next[i] for i in _a])
-            Q_targets_next = Q_targets_next.view(Q_targets_next.shape[0], 1)
+        if self.double:
+            action_indices = self.qnetwork_local.forward(next_states).detach().argmax(1)
+            q_next = self.qnetwork_target.forward(next_states).detach()
+            Q_targets_next = q_next[self.batch_indices, action_indices].view(BATCH_SIZE, 1)
         
         Q_targets = rewards + gamma * Q_targets_next * (1 - dones)
         Q_expected = self.qnetwork_local(states).gather(1, actions)

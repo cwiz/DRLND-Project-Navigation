@@ -165,3 +165,30 @@ Episode 2000	Average Score: 11.21
 ```
 
 ![DQN-3](https://github.com/cwiz/DRLND-Project-Navigation/blob/master/images/variant-3.png?raw=true "Double DQN + PER")
+
+#### Dueling DQN
+
+```
+Episode 100	Average Score: 0.78
+Episode 200	Average Score: 2.33
+Episode 300	Average Score: 5.12
+Episode 400	Average Score: 8.46
+Episode 500	Average Score: 12.06
+Episode 600	Average Score: 13.78
+Episode 700	Average Score: 13.90
+Episode 800	Average Score: 14.28
+Episode 900	Average Score: 14.68
+Episode 1000	Average Score: 14.63
+Episode 1100	Average Score: 14.73
+Episode 1200	Average Score: 14.62
+Episode 1300	Average Score: 14.47
+Episode 1400	Average Score: 14.39
+Episode 1500	Average Score: 14.66
+Episode 1600	Average Score: 14.77
+Episode 1700	Average Score: 14.48
+Episode 1800	Average Score: 14.01
+Episode 1900	Average Score: 14.06
+Episode 2000	Average Score: 14.47
+```
+
+![DQN-4](https://github.com/cwiz/DRLND-Project-Navigation/blob/master/images/variant-3.png?raw=true "Dueling DQN")
