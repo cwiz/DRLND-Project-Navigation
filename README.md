@@ -8,18 +8,21 @@ Class of May 2019
 
 ## Project Description
 
-This project is introduction to Deep Reinforcement Learning. It involves implementing Deep-Q-Learning algorithm in two different flavors: with fully-observable state and from raw pixels.
+This project is introduction to Deep Reinforcement Learning in general and Deep-Q-Learning (DQN) algorithm in particular. DQN has made a number of breakthroughs in recent years (2015 and onward) with superhuman performance in Atari Games, Go (AlphaGo) and Chess (AlphaZero).
 
-We are given a simulator of 3D world where an agent need to collect bananas. Our goal is to collect yellow bananas and ignore blue bananas. 
+TODO: Add links to papers
 
-In first flavor a state space consists of 37 dimensions and with raw pixel flavor we are given 84-by-84 px 3 channel image.
+Environment we have in this project is a simulator of 3D world where an agent needs to collect bananas. For yellow banana agent gets reward of +1 and for blue one -1. Episode is terminated after 100 epochs.
+
+First variant of this projects has state space consists of 37 dimensions. In second variant we deal with raw pixels (84x84x3).
 
 Control space consists of 4 dimensions. 
 
 ## Project Goals
 
 * Introduction to Deep Reinforcement Learning
-* Introduction to DQL-algorithm
+* Introduction to DQN-Algorithm
+* Testing of recent improvements to DQN
 
 ## Technical Formulation of Problem 
 
@@ -29,7 +32,10 @@ Control space consists of 4 dimensions.
 
 ## Mathematical Models
 
-In this project we are implementing Deep-Q-Learning (DQL) algorithm, that a variant of Temporal Difference (TD) learning. Key advantages of it that it is (1) Model-free (does not need model of underlying world, dynamics or rewards) and uses bootstrapping to estimate value function. 
+In this project we are implementing Deep-Q-Learning (DQL) algorithm, that a variant of Temporal Difference (TD) learning. TD learning is characterized by:
+
+1. Model-free (does not need model of underlying world, dynamics or rewards) 
+2. Bootstrapping to estimate value function. 
 
 DQN algorithm can be implemented as follows:
 
@@ -75,7 +81,12 @@ index = self.qnetwork_local.forward(next_states).detach().argmax(1)
 Q_targets_next = self.qnetwork_target.forward(next_states).detach()
 _a = tuple([(i, j) for i, j in enumerate(list(index))])
 Q_targets_next = torch.stack([Q_targets_next[i] for i in _a])
+
 ```
+
+### Dueling DQN
+
+### Prioritized Replay
 
 ### Results
 
