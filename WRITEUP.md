@@ -44,11 +44,10 @@ In this project we are using [Unity ML-Agent] Banana Collectors environment.
 ## Technical Formulation of Problem 
 
 * Set up environment as described in [Project Repository](https://github.com/udacity/deep-reinforcement-learning/tree/master/p1_navigation)
-* Complete Navigation.ipynb for complete state-space flavor
-* [Optional, TO-DO] Complete Navigation_Pixels.ipynb
+* Complete Navigation.ipynb
+* [Optional] Complete Navigation_Pixels.ipynb
 
 ## Mathematical Models
-
 
 **Reinforcement Learning (RL)** deals with family of algorithms in which an **Agent** interacts with **Environment** and receives **Rewards** for it's **Actions**. There are two types of RL algorithms: (1) **Model-Based** where we have explicit model of environment, agent their interactions (2) **Model-Free** in which agent has to learn these models or their estimates. Goal of agent is to maximize reward.
 
