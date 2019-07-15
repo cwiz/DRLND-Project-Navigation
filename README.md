@@ -193,5 +193,7 @@ Requirement for passing solution is above getting average score over 100 episode
 
 [1] [V Mnih et al. *Human-level control through deep reinforcement
 learning*, Nature 518 529-533, 2015](https://storage.googleapis.com/deepmind-media/dqn/DQNNaturePaper.pdf)
+
 [2] [Hado et al. *Deep Reinforcement Learning with Double Q-learning*, Arxiv, 2015](https://arxiv.org/abs/1509.06461)
+
 [3] [Ziyu el al. *Dueling Network Architectures for Deep Reinforcement Learning*, Arxiv, 2015](https://arxiv.org/abs/1511.06581)
