@@ -1,4 +1,4 @@
-# Project 1: Navigation
+# Project 1: Navigation [DRAFT]
 
 **Sergei Surovtsev**
 <br/>
@@ -8,42 +8,64 @@ Class of May 2019
 
 ## Project Description
 
-This project is introduction to Deep Reinforcement Learning in general and Deep-Q-Learning (DQN) algorithm in particular. DQN has made a number of breakthroughs in recent years (2015 and onward) with superhuman performance in Atari Games, Go (AlphaGo) and Chess (AlphaZero).
+This project is introduction to Deep Reinforcement Learning and Deep-Q-Networks (DQN) algorithm. DQN has contributed to number of breakthroughs such as superhuman performance in Atari games [1] and AlphaGo.
 
-TODO: Add links to papers
+In this project we are using [Unity ML-Agent] Banana Collectors environment.
 
-Environment we have in this project is a simulator of 3D world where an agent needs to collect bananas. For yellow banana agent gets reward of +1 and for blue one -1. Episode is terminated after 100 epochs.
+[![Unity ML-Agent Banana Collectors](https://img.youtube.com/vi/heVMs3t9qSk/0.jpg)](https://www.youtube.com/watch?v=heVMs3t9qSk).
 
-First variant of this projects has state space consists of 37 dimensions. In second variant we deal with raw pixels (84x84x3).
+**Goal**
 
-Control space consists of 4 dimensions. 
+* Collect as many yellow bananas as possible
 
+**Observations** 
+
+* Variant 1: Local ray-cast perception on nearby objects
+* Variant 2: First-person view of agent (84x84 RGB pixels)
+
+**Actions** 
+
+* Move forward
+* Move backward
+* Rotate left
+* Rotate right
+
+**Rewards** 
+
+* +1 on collision with yellow banana
+* -1 on collision in blue banana
+ 
 ## Project Goals
 
 * Introduction to Deep Reinforcement Learning
-* Introduction to DQN-Algorithm
-* Testing of recent improvements to DQN
+* Introduction to DQN Algorithm
+* Testing of improved flavors of original DQN Algorithm
 
 ## Technical Formulation of Problem 
 
 * Set up environment as described in [Project Repository](https://github.com/udacity/deep-reinforcement-learning/tree/master/p1_navigation)
 * Complete Navigation.ipynb for complete state-space flavor
-* [Optional] Complete Navigation_Pixels.ipynb
+* [Optional, TO-DO] Complete Navigation_Pixels.ipynb
 
 ## Mathematical Models
 
-In this project we are implementing Deep-Q-Learning (DQL) algorithm, that a variant of Temporal Difference (TD) learning. TD learning is characterized by:
 
-1. Model-free (does not need model of underlying world, dynamics or rewards) 
-2. Bootstrapping to estimate value function. 
+**Reinforcement Learning (RL)** deals with family of algorithms in which an **Agent** interacts with **Environment** and receives **Rewards** for it's **Actions**. There are two types of RL algorithms: (1) **Model-Based** where we have explicit model of environment, agent their interactions (2) **Model-Free** in which agent has to learn these models or their estimates. Goal of agent is to maximize reward.
 
-DQN algorithm can be implemented as follows:
+In this project we are dealing with **Terporal-Difference (TD)** algorithm belonging to Model-Free family of algorithms called **Deep-Q-Networks (DQN)**.
+
+TD algorithms try to predict a metric such as **Expected Discounted Sum of Future Rewards V** that depend on future rewards that agents gets by following a **Policy P**. TD methods use bootstrapping and estimate V by sampling environment. P is a mapping from state to actions. V estimates expected sum of rewards for following P.
+
+Deep-Q-Networks is a modification of Q-Learning algorithm which uses Neural Networks. In Q-Learning we are estimating a **Policy P** by estimating a state-action mapping Q. Classic formulation describes Q as a tabular mapping and DQN flavor used Neural Network to learn this mapping. DQN Algorithm:
+
+
+### Vanilla DQN
+
+Algorithm:
 
 ![segmentation-obstacles](https://github.com/cwiz/DRLND-Project-Navigation/blob/master/images/dqn.png?raw=true "DQN")
 
-In classical formulation for Q-Learning we use table (matrix) to estimate (quantized) state-action function. In DQN flavor we use neural network for it.
-
-### Vanilla DQN
+Neural Network:
 
 ```python
 class QNetwork(nn.Module):
@@ -74,7 +96,7 @@ class QNetwork(nn.Module):
 
 ### Double DQN
 
-A slight change in how Q_targets_next improves performance. Intuition here that this simple trick improves convergence (indexing live network by argmax of frozen)
+Improvement to DQN which samples action from target networks instead from local one by indexing target network by argmax of of local network. Intuition for this improvement is that those 2 networks have to agree on action which should improve convergence properties of the algorithm. [2]
 
 ```python
 index = self.qnetwork_local.forward(next_states).detach().argmax(1)
@@ -86,120 +108,90 @@ Q_targets_next = torch.stack([Q_targets_next[i] for i in _a])
 
 ### Dueling DQN
 
-### Prioritized Replay
+Dueling DQN changes architecture of Q-Network by splitting it's head to State value and State-Action value estimates. 
+
+```python
+class DuelingQNetwork(nn.Module):
+    def __init__(self, state_size, action_size, seed, fc1_units=64, fc2_units=64, fc_a_units=32, fc_v_units=32):
+        super(DuelingQNetwork, self).__init__()
+        self.seed = torch.manual_seed(seed)
+
+        self.fc1 = nn.Linear(state_size, fc1_units)
+        self.fc2 = nn.Linear(fc1_units, fc2_units)
+
+        self.fc_h_a = nn.Linear(fc2_units, fc_a_units)
+        self.fc_z_a = nn.Linear(fc_a_units, action_size)
+
+        self.fc_h_v = nn.Linear(fc2_units, fc_v_units)
+        self.fc_z_v = nn.Linear(fc_v_units, 1)
+
+    def forward(self, state):
+        x = F.relu(self.fc1(state))
+        x = F.relu(self.fc2(x))
+
+        v = F.relu(self.fc_h_v(x))
+        v = self.fc_z_v(v)
+
+        a = F.relu(self.fc_h_a(x))
+        a = self.fc_z_a(a)
+
+        q = v + a - a.mean()
+        return q
+```
+
+### Prioritized Experience Replay [DRAFT]
+
+**TODO: Check correctness**
+
+Prioritized Experience Replay [PER] modification of DQN changes the we we sample from Experience Replay buffer by assigning weights proportional to an error signal used in learning. The bigger error is the larger contribution to weigh updates of neural network, hence learning should be faster. 
+
+Here's the change to Experience buffer. We assign sampling probabilities proportional to priorities.
+
+```python
+    def get_probabilities_from_priorities(self):
+        priorities = np.array(
+            [e.priority for e in self.memory if e is not None])
+        scaled_priorities = (priorities + self.epsilon)**self.alpha
+        return scaled_priorities / np.sum(scaled_priorities)
+
+    def sample(self):
+        probabilities = self.get_probabilities_from_priorities()
+        idxs = np.random.choice(
+            np.arange(0, len(self.memory)), self.batch_size, p=probabilities)
+        experiences = []
+        for j, i in enumerate(idxs):
+            self.memory[i].probability = probabilities[j]
+            experiences.append(self.memory[i])
+        ...
+```
+
+Here's how we assign priorities in ```Agent.learn``` function.
+
+```python
+if self.priority_replay:
+    td_error = (
+        Q_expected - Q_targets).detach().abs().cpu().numpy().reshape(-1)
+    self.memory.update_priorities(idxs, td_error)
+    p = self.memory.get_probabilities_from_indices(idxs)
+    p = torch.cuda.FloatTensor((1. / BATCH_SIZE) * (1. / p))
+    loss = (p * loss).mean()
+```
 
 ### Results
 
-#### Vanilla DQN
+Requirement for passing solution is above getting average score over 100 episodes above 13 under 2000 episodes of training. Refer to Navigation.ipynb
 
-Converges to avg score ~ 13 around 700 episode, highscore 13.20
+#### Learning from ray-cast perception state-vector
 
-```
-Episode 100	Average Score: 0.53
-Episode 200	Average Score: 2.08
-Episode 300	Average Score: 5.25
-Episode 400	Average Score: 7.69
-Episode 500	Average Score: 10.35
-Episode 600	Average Score: 12.78
-Episode 700	Average Score: 13.20
-Episode 800	Average Score: 13.09
-Episode 900	Average Score: 13.04
-Episode 1000	Average Score: 13.04
-Episode 1100	Average Score: 12.94
-Episode 1200	Average Score: 13.06
-Episode 1300	Average Score: 12.93
-Episode 1400	Average Score: 12.91
-Episode 1500	Average Score: 13.20
-Episode 1600	Average Score: 12.96
-Episode 1700	Average Score: 13.12
-Episode 1800	Average Score: 13.13
-Episode 1900	Average Score: 12.58
-Episode 2000	Average Score: 12.35
-```
+![segmentation-obstacles](https://github.com/cwiz/DRLND-Project-Navigation/blob/master/images/results-state-1.png?raw=true "DQN")
 
-![DQN-1](https://github.com/cwiz/DRLND-Project-Navigation/blob/master/images/variant-1.png?raw=true "DQN")
+#### Learning from raw pixels [DRAFT]
 
-#### Double DQN
+[TODO: Complete Solution]
 
-Converges to avg score ~ 13 around 600 episode, highscore 16.
+## References
 
-```
-Episode 100	Average Score: 0.24
-Episode 200	Average Score: 1.56
-Episode 300	Average Score: 4.72
-Episode 400	Average Score: 8.30
-Episode 500	Average Score: 11.49
-Episode 600	Average Score: 13.21
-Episode 700	Average Score: 13.66
-Episode 800	Average Score: 14.62
-Episode 900	Average Score: 15.38
-Episode 1000	Average Score: 15.57
-Episode 1100	Average Score: 15.84
-Episode 1200	Average Score: 15.62
-Episode 1300	Average Score: 15.82
-Episode 1400	Average Score: 15.89
-Episode 1500	Average Score: 15.84
-Episode 1600	Average Score: 15.88
-Episode 1700	Average Score: 15.85
-Episode 1800	Average Score: 16.14
-Episode 1900	Average Score: 15.80
-Episode 2000	Average Score: 15.17
-```
-
-![DQN-2](https://github.com/cwiz/DRLND-Project-Navigation/blob/master/images/variant-2.png?raw=true "Double DQN")
-
-#### Double DQN + Prioritized Experience Replay
-
-Average score gets to peak 12.88 around 1400 episode then decreases to 11. This artifact is probably due to bad hyperparameter b (pow(b)) used to update model weights. Note how this variant has higher score variance.
-
-```
-Episode 100	Average Score: 0.28
-Episode 200	Average Score: 1.47
-Episode 300	Average Score: 4.67
-Episode 400	Average Score: 8.25
-Episode 500	Average Score: 10.61
-Episode 600	Average Score: 11.93
-Episode 700	Average Score: 12.71
-Episode 800	Average Score: 12.37
-Episode 900	Average Score: 12.09
-Episode 1000	Average Score: 12.27
-Episode 1100	Average Score: 12.29
-Episode 1200	Average Score: 12.53
-Episode 1300	Average Score: 12.54
-Episode 1400	Average Score: 12.88
-Episode 1500	Average Score: 13.11
-Episode 1600	Average Score: 12.41
-Episode 1700	Average Score: 12.06
-Episode 1800	Average Score: 11.77
-Episode 1900	Average Score: 11.02
-Episode 2000	Average Score: 11.21
-```
-
-![DQN-3](https://github.com/cwiz/DRLND-Project-Navigation/blob/master/images/variant-3.png?raw=true "Double DQN + PER")
-
-#### Dueling DQN
-
-```
-Episode 100	Average Score: 0.78
-Episode 200	Average Score: 2.33
-Episode 300	Average Score: 5.12
-Episode 400	Average Score: 8.46
-Episode 500	Average Score: 12.06
-Episode 600	Average Score: 13.78
-Episode 700	Average Score: 13.90
-Episode 800	Average Score: 14.28
-Episode 900	Average Score: 14.68
-Episode 1000	Average Score: 14.63
-Episode 1100	Average Score: 14.73
-Episode 1200	Average Score: 14.62
-Episode 1300	Average Score: 14.47
-Episode 1400	Average Score: 14.39
-Episode 1500	Average Score: 14.66
-Episode 1600	Average Score: 14.77
-Episode 1700	Average Score: 14.48
-Episode 1800	Average Score: 14.01
-Episode 1900	Average Score: 14.06
-Episode 2000	Average Score: 14.47
-```
-
-![DQN-4](https://github.com/cwiz/DRLND-Project-Navigation/blob/master/images/variant-3.png?raw=true "Dueling DQN")
+[1] [V Mnih et al. *Human-level control through deep reinforcement
+learning*, Nature 518 529-533, 2015](https://storage.googleapis.com/deepmind-media/dqn/DQNNaturePaper.pdf)
+[2] [Hado et al. *Deep Reinforcement Learning with Double Q-learning*, Arxiv, 2015](https://arxiv.org/abs/1509.06461)
+[3] [Ziyu el al. *Dueling Network Architectures for Deep Reinforcement Learning*, Arxiv, 2015](https://arxiv.org/abs/1511.06581)
