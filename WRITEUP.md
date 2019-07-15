@@ -62,7 +62,7 @@ Deep-Q-Networks is a modification of Q-Learning algorithm which uses Neural Netw
 
 **Algorithm**
 
-![segmentation-obstacles](https://github.com/cwiz/DRLND-Project-Navigation/blob/master/images/dqn.png?raw=true )
+![segmentation-obstacles](https://github.com/cwiz/DRLND-Project-Navigation/blob/master/images/dqn.png?raw=true ){:width="450px"}
 
 **Neural Network**
 
