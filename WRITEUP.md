@@ -183,7 +183,7 @@ Current project was evaluated with following hyperparameters. Adam was used as g
 
 ```python
 BUFFER_SIZE = int(1e5)  # replay buffer size
-# BATCH_SIZE = 128      # minibatch size
+BATCH_SIZE = 128        # minibatch size
 GAMMA = 0.99            # discount factor
 TAU = 1e-3              # for soft update of target parameters
 LR = 5e-4               # learning rate
