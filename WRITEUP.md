@@ -55,7 +55,7 @@ In this project we are dealing with **Terporal-Difference (TD)** algorithm belon
 
 TD algorithms try to predict a metric such as **Expected Discounted Sum of Future Rewards V** that depend on future rewards that agents gets by following a **Policy P**. TD methods use bootstrapping and estimate V by sampling environment. P is a mapping from state to actions. V estimates expected sum of rewards for following P.
 
-Deep-Q-Networks is a modification of Q-Learning algorithm which uses Neural Networks. In Q-Learning we are estimating a **Policy P** by estimating a state-action mapping Q. Classic formulation describes Q as a tabular mapping and DQN flavor used Neural Networks.
+Deep-Q-Networks is a modification of Q-Learning algorithm which uses Neural Networks. In Q-Learning we are estimating a **Policy P** by estimating a state-action mapping Q. Classic formulation describes Q as a tabular mapping and DQN flavor uses Neural Networks.
 
 
 ### Vanilla DQN
