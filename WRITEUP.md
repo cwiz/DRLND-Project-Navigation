@@ -39,7 +39,7 @@ In this project we are using [Unity ML-Agent] Banana Collectors environment.
 
 * Introduction to Deep Reinforcement Learning
 * Introduction to DQN Algorithm
-* Testing of improved flavors of original DQN Algorithm
+* Testing of improved modification of original DQN Algorithm
 
 ## Technical Formulation of Problem 
 
