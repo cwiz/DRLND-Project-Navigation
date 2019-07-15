@@ -205,7 +205,7 @@ Requirement for passing solution is getting average score over 100 episodes abov
 
 ### Learning from raw pixels [DRAFT]
 
-[TODO: Complete Solution]
+**TODO: Implement**
 
 ## References
 
