@@ -141,6 +141,19 @@ class DuelingQNetwork(nn.Module):
 
 ### Prioritized Experience Replay [DRAFT]
 
+## Hyperparameters
+
+Current project was evaluated with following hyperparameters. Adam was used as gradient descent flavor. 
+
+```python
+BUFFER_SIZE = int(1e5)  # replay buffer size
+# BATCH_SIZE = 128      # minibatch size
+GAMMA = 0.99            # discount factor
+TAU = 1e-3              # for soft update of target parameters
+LR = 5e-4               # learning rate
+UPDATE_EVERY = 4        # how often to update the network
+```
+
 **TODO: Check correctness**
 
 Prioritized Experience Replay [PER] modification of DQN changes the we we sample from Experience Replay buffer by assigning weights proportional to an error signal used in learning. The bigger error is the larger contribution to weigh updates of neural network, hence learning should be faster. 
@@ -184,6 +197,10 @@ Requirement for passing solution is above getting average score over 100 episode
 #### Learning from ray-cast perception state-vector
 
 ![segmentation-obstacles](https://github.com/cwiz/DRLND-Project-Navigation/blob/master/images/results-state-1.png?raw=true "DQN")
+
+* [Vanilla DQN Rewards-Per-Episode](https://github.com/cwiz/DRLND-Project-Navigation/blob/master/images/variant-1.png)
+* [Double DQN Rewards-Per-Episode](https://github.com/cwiz/DRLND-Project-Navigation/blob/master/images/variant-2.png)
+* [D*ueling DQN Rewards-Per-Episode](https://github.com/cwiz/DRLND-Project-Navigation/blob/master/images/variant-2.png)
 
 #### Learning from raw pixels [DRAFT]
 
