@@ -141,18 +141,6 @@ class DuelingQNetwork(nn.Module):
 
 ### Prioritized Experience Replay [DRAFT]
 
-## Hyperparameters
-
-Current project was evaluated with following hyperparameters. Adam was used as gradient descent flavor. 
-
-```python
-BUFFER_SIZE = int(1e5)  # replay buffer size
-# BATCH_SIZE = 128      # minibatch size
-GAMMA = 0.99            # discount factor
-TAU = 1e-3              # for soft update of target parameters
-LR = 5e-4               # learning rate
-UPDATE_EVERY = 4        # how often to update the network
-```
 
 **TODO: Check correctness**
 
@@ -190,11 +178,25 @@ if self.priority_replay:
     loss = (p * loss).mean()
 ```
 
-### Results
+## Hyperparameters
+
+Current project was evaluated with following hyperparameters. Adam was used as gradient descent flavor. 
+
+```python
+BUFFER_SIZE = int(1e5)  # replay buffer size
+# BATCH_SIZE = 128      # minibatch size
+GAMMA = 0.99            # discount factor
+TAU = 1e-3              # for soft update of target parameters
+LR = 5e-4               # learning rate
+UPDATE_EVERY = 4        # how often to update the network
+```
+
+
+## Results
 
 Requirement for passing solution is above getting average score over 100 episodes above 13 under 2000 episodes of training. Refer to Navigation.ipynb
 
-#### Learning from ray-cast perception state-vector
+### Learning from ray-cast perception state-vector
 
 ![segmentation-obstacles](https://github.com/cwiz/DRLND-Project-Navigation/blob/master/images/results-state-1.png?raw=true "DQN")
 
@@ -202,7 +204,7 @@ Requirement for passing solution is above getting average score over 100 episode
 * [Double DQN Rewards-Per-Episode](https://github.com/cwiz/DRLND-Project-Navigation/blob/master/images/variant-2.png)
 * [Dueling DQN Rewards-Per-Episode](https://github.com/cwiz/DRLND-Project-Navigation/blob/master/images/variant-2.png)
 
-#### Learning from raw pixels [DRAFT]
+### Learning from raw pixels [DRAFT]
 
 [TODO: Complete Solution]
 
