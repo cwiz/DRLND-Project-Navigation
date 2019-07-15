@@ -143,7 +143,7 @@ class DuelingQNetwork(nn.Module):
 
 **TODO: Check correctness**
 
-Prioritized Experience Replay [PER] modification of DQN changes the we we sample from Experience Replay buffer by assigning weights proportional to an error signal used in learning. The bigger error is the larger contribution to weigh updates of neural network, hence learning should be faster. 
+Prioritized Experience Replay [PER] is modification of DQN that changes the way we sample from Experience Replay buffer by assigning weights proportional to an error signal.
 
 Here's the change to Experience buffer. We assign sampling probabilities proportional to priorities.
 
@@ -165,7 +165,7 @@ Here's the change to Experience buffer. We assign sampling probabilities proport
         ...
 ```
 
-Here's how we assign priorities in ```Agent.learn``` function.
+Here's how we assign priorities to experience samples in ```Agent.learn``` function.
 
 ```python
 if self.priority_replay:
@@ -193,7 +193,7 @@ UPDATE_EVERY = 4        # how often to update the network
 
 ## Results
 
-Requirement for passing solution is above getting average score over 100 episodes above 13 under 2000 episodes of training. Refer to Navigation.ipynb
+Requirement for passing solution is getting average score over 100 episodes above 13 under 2000 episodes of training. Refer to Navigation.ipynb for details of implementation.
 
 ### Learning from ray-cast perception state-vector
 
