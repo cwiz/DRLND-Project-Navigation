@@ -49,7 +49,7 @@ In this project we are using [Unity ML-Agent] Banana Collectors environment.
 
 ## Mathematical Models
 
-**Reinforcement Learning (RL)** deals with family of algorithms in which an **Agent** interacts with **Environment** and receives **Rewards** for it's **Actions**. There are two types of RL algorithms: (1) **Model-Based** where we have explicit model of environment, agent their interactions (2) **Model-Free** in which agent has to learn these models or their estimates. Goal of agent is to maximize reward.
+**Reinforcement Learning (RL)** deals with family of algorithms in which an **Agent** interacts with **Environment** and receives **Rewards** for it's **Actions**. There are two types of RL algorithms: (1) **Model-Based** where we have explicit model of environment, agent and their interactions (2) **Model-Free** in which agent has to learn these estimates of those models. Goal of agent is to maximize reward.
 
 In this project we are dealing with **Terporal-Difference (TD)** algorithm belonging to Model-Free family of algorithms called **Deep-Q-Networks (DQN)**.
 
