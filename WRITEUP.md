@@ -8,7 +8,7 @@ Class of May 2019
 
 ## Project Description
 
-This project is introduction to Deep Reinforcement Learning and Deep-Q-Networks (DQN) algorithm. DQN has contributed to number of breakthroughs such as superhuman performance in Atari games [1] and AlphaGo.
+This project is introduction to Deep Reinforcement Learning and Deep-Q-Networks (DQN) algorithm. DQN has contributed to number of breakthroughs such as superhuman performance in Atari games [1].
 
 In this project we are using [Unity ML-Agent] Banana Collectors environment.
 
@@ -55,7 +55,7 @@ In this project we are dealing with **Terporal-Difference (TD)** algorithm belon
 
 TD algorithms try to predict a metric such as **Expected Discounted Sum of Future Rewards V** that depend on future rewards that agents gets by following a **Policy P**. TD methods use bootstrapping and estimate V by sampling environment. P is a mapping from state to actions. V estimates expected sum of rewards for following P.
 
-Deep-Q-Networks is a modification of Q-Learning algorithm which uses Neural Networks. In Q-Learning we are estimating a **Policy P** by estimating a state-action mapping Q. Classic formulation describes Q as a tabular mapping and DQN flavor used Neural Network to learn this mapping. DQN Algorithm:
+Deep-Q-Networks is a modification of Q-Learning algorithm which uses Neural Networks. In Q-Learning we are estimating a **Policy P** by estimating a state-action mapping Q. Classic formulation describes Q as a tabular mapping and DQN flavor used Neural Networks.
 
 
 ### Vanilla DQN
@@ -102,7 +102,6 @@ index = self.qnetwork_local.forward(next_states).detach().argmax(1)
 Q_targets_next = self.qnetwork_target.forward(next_states).detach()
 _a = tuple([(i, j) for i, j in enumerate(list(index))])
 Q_targets_next = torch.stack([Q_targets_next[i] for i in _a])
-
 ```
 
 ### Dueling DQN
