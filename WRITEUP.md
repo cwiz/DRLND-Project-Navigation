@@ -60,11 +60,11 @@ Deep-Q-Networks is a modification of Q-Learning algorithm which uses Neural Netw
 
 ### Vanilla DQN
 
-Algorithm:
+**Algorithm**
 
 ![segmentation-obstacles](https://github.com/cwiz/DRLND-Project-Navigation/blob/master/images/dqn.png?raw=true "DQN")
 
-Neural Network:
+**Neural Network**
 
 ```python
 class QNetwork(nn.Module):
@@ -108,6 +108,8 @@ Q_targets_next = torch.stack([Q_targets_next[i] for i in _a])
 ### Dueling DQN
 
 Dueling DQN changes architecture of Q-Network by splitting it's head to State value and State-Action value estimates. 
+
+**Neural Network**
 
 ```python
 class DuelingQNetwork(nn.Module):
