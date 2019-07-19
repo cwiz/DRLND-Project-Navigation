@@ -236,7 +236,41 @@ Requirement for passing solution is getting average score over 100 episodes abov
 
 ### Learning from raw pixels 
 
-Learning is substantially slower than in previous case.
+```
+Episode 100	Average Score: 0.29
+Episode 200	Average Score: 0.96
+Episode 300	Average Score: 1.81
+Episode 400	Average Score: 2.07
+Episode 500	Average Score: 2.54
+Episode 600	Average Score: 2.87
+Episode 700	Average Score: 2.92
+Episode 800	Average Score: 2.98
+Episode 900	Average Score: 3.41
+Episode 1000	Average Score: 3.74
+Episode 1100	Average Score: 3.89
+Episode 1200	Average Score: 3.67
+Episode 1300	Average Score: 3.67
+Episode 1400	Average Score: 3.57
+Episode 1500	Average Score: 3.50
+Episode 1600	Average Score: 4.08
+Episode 1700	Average Score: 3.21
+Episode 1800	Average Score: 3.38
+Episode 1900	Average Score: 3.38
+Episode 2000	Average Score: 3.32
+Episode 2100	Average Score: 3.30
+Episode 2200	Average Score: 2.66
+Episode 2300	Average Score: 2.92
+Episode 2400	Average Score: 3.42
+Episode 2500	Average Score: 2.92
+Episode 2600	Average Score: 3.21
+Episode 2700	Average Score: 3.28
+Episode 2800	Average Score: 3.86
+Episode 2900	Average Score: 3.60
+Episode 3000	Average Score: 3.50
+```
+
+* [Double DQN from pixels](https://github.com/cwiz/DRLND-Project-Navigation/blob/master/images/pixels.png)
+
 
 ## References
 
