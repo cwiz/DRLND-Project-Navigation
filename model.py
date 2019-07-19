@@ -31,6 +31,7 @@ class QNetwork(nn.Module):
 
 
 class DuelingQNetwork(nn.Module):
+    
     def __init__(self, state_size, action_size, seed, fc1_units=64, fc2_units=64, fc_a_units=32, fc_v_units=32):
         super(DuelingQNetwork, self).__init__()
         self.seed = torch.manual_seed(seed)
@@ -62,7 +63,7 @@ class VisualQNetwork(nn.Module):
 
     def __init__(self, state_size, action_size, seed, fc1_units=64, fc2_units=64):
         super(VisualQNetwork, self).__init__()
-        self.conv1 = nn.Conv2d(3, 16, kernel_size=5, stride=2)
+        self.conv1 = nn.Conv2d(11, 16, kernel_size=5, stride=2)
         self.bn1 = nn.BatchNorm2d(16)
         self.conv2 = nn.Conv2d(16, 32, kernel_size=5, stride=2)
         self.bn2 = nn.BatchNorm2d(32)
@@ -76,16 +77,18 @@ class VisualQNetwork(nn.Module):
         # Number of Linear input connections depends on output of conv2d layers
         # and therefore the input image size, so compute it.
         def conv2d_size_out(size, kernel_size = 5, stride = 2):
-            return (size - (kernel_size - 1) - 1) // stride  + 1
+            return ((size - (kernel_size - 1) - 1) // stride  + 1)
         convw = conv2d_size_out(conv2d_size_out(conv2d_size_out(self.w)))
         convh = conv2d_size_out(conv2d_size_out(conv2d_size_out(self.h)))
-        linear_input_size = convw * convh * 32
+        linear_input_size = convw * convh * 32 
         self.head = nn.Linear(linear_input_size, fc1_units)
-        self.fc2 = nn.Linear(fc1_units, fc2_units)
-        self.fc3 = nn.Linear(fc2_units, action_size)
+        self.fc2 = nn.Linear(fc1_units, action_size)
     
     def forward(self, x):
-        x = x.view(-1, self.n_channels, self.w, self.h)
+
+        if len(x.shape) != 4:
+            x = x.view(-1, 11, 84, 84)
+
         x = F.relu(self.bn1(self.conv1(x)))
         x = F.relu(self.bn2(self.conv2(x)))
         x = F.relu(self.bn3(self.conv3(x)))

@@ -141,7 +141,6 @@ class DuelingQNetwork(nn.Module):
 
 ### Prioritized Experience Replay [DRAFT]
 
-
 **TODO: Check correctness**
 
 Prioritized Experience Replay [PER] is modification of DQN that changes the way we sample from Experience Replay buffer by assigning weights proportional to an error signal.
@@ -178,6 +177,52 @@ if self.priority_replay:
     loss = (p * loss).mean()
 ```
 
+## Learning from Pixels
+
+**State augmentation**
+
+Learning from pixels model must learn state space from raw pixels. Previous state space included velocity and acceleration, the dynamic parameters of an agent. To learn them we have to augment raw pixel state space:
+
+```python
+def augment_state(frames, actions):
+    action_t_minus_1, action_t = actions[-1], actions[0]
+    pix_t_minus_1, pix_t, pix_t_plus_1 = frames[0]
+           
+    return np.stack([
+        pix_t_minus_1,    # unrolled to 3 dimensions
+        action_t_minus_1, # 1 dim
+        pix_t,            # unrolled to 3 dimensions
+        action_t,         # 1 dim
+        pix_t_plus_1,     # unrolled to 3 dimensions 
+    ])
+```
+
+**Neural Network**
+
+```
+----------------------------------------------------------------
+        Layer (type)               Output Shape         Param #
+================================================================
+            Conv2d-1           [-1, 16, 40, 40]           4,416
+       BatchNorm2d-2           [-1, 16, 40, 40]              32
+            Conv2d-3           [-1, 32, 18, 18]          12,832
+       BatchNorm2d-4           [-1, 32, 18, 18]              64
+            Conv2d-5             [-1, 32, 7, 7]          25,632
+       BatchNorm2d-6             [-1, 32, 7, 7]              64
+            Linear-7                   [-1, 64]         100,416
+            Linear-8                    [-1, 4]             260
+================================================================
+Total params: 143,716
+Trainable params: 143,716
+Non-trainable params: 0
+----------------------------------------------------------------
+Input size (MB): 18.95
+Forward/backward pass size (MB): 0.57
+Params size (MB): 0.55
+Estimated Total Size (MB): 20.07
+----------------------------------------------------------------
+```
+
 ## Hyperparameters
 
 Current project was evaluated with following hyperparameters. Adam was used as gradient descent flavor. 
@@ -204,9 +249,9 @@ Requirement for passing solution is getting average score over 100 episodes abov
 * [Double DQN Rewards-Per-Episode](https://github.com/cwiz/DRLND-Project-Navigation/blob/master/images/variant-2.png)
 * [Dueling DQN Rewards-Per-Episode](https://github.com/cwiz/DRLND-Project-Navigation/blob/master/images/variant-2.png)
 
-### Learning from raw pixels [DRAFT]
+### Learning from raw pixels 
 
-**TODO: Implement**
+Learning is substantially slower than in previous case.
 
 ## References
 
