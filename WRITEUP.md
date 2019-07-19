@@ -66,31 +66,23 @@ Deep-Q-Networks is a modification of Q-Learning algorithm which uses Neural Netw
 
 **Neural Network**
 
-```python
-class QNetwork(nn.Module):
-    """Actor (Policy) Model."""
-
-    def __init__(self, state_size, action_size, seed, fc1_units=64, fc2_units=64):
-        """Initialize parameters and build model.
-        Params
-        ======
-            state_size (int): Dimension of each state
-            action_size (int): Dimension of each action
-            seed (int): Random seed
-            fc1_units (int): Number of nodes in first hidden layer
-            fc2_units (int): Number of nodes in second hidden layer
-        """
-        super(QNetwork, self).__init__()
-        self.seed = torch.manual_seed(seed)
-        self.fc1 = nn.Linear(state_size, fc1_units)
-        self.fc2 = nn.Linear(fc1_units, fc2_units)
-        self.fc3 = nn.Linear(fc2_units, action_size)
-
-    def forward(self, state):
-        """Build a network that maps state -> action values."""
-        x = F.relu(self.fc1(state))
-        x = F.relu(self.fc2(x))
-        return self.fc3(x)
+```
+----------------------------------------------------------------
+        Layer (type)               Output Shape         Param #
+================================================================
+            Linear-1              [-1, 256, 64]           2,432
+            Linear-2              [-1, 256, 64]           4,160
+            Linear-3               [-1, 256, 4]             260
+================================================================
+Total params: 6,852
+Trainable params: 6,852
+Non-trainable params: 0
+----------------------------------------------------------------
+Input size (MB): 0.04
+Forward/backward pass size (MB): 0.26
+Params size (MB): 0.03
+Estimated Total Size (MB): 0.32
+----------------------------------------------------------------
 ```
 
 ### Double DQN
@@ -110,33 +102,26 @@ Dueling DQN changes architecture of Q-Network by splitting it's head to State va
 
 **Neural Network**
 
-```python
-class DuelingQNetwork(nn.Module):
-    def __init__(self, state_size, action_size, seed, fc1_units=64, fc2_units=64, fc_a_units=32, fc_v_units=32):
-        super(DuelingQNetwork, self).__init__()
-        self.seed = torch.manual_seed(seed)
-
-        self.fc1 = nn.Linear(state_size, fc1_units)
-        self.fc2 = nn.Linear(fc1_units, fc2_units)
-
-        self.fc_h_a = nn.Linear(fc2_units, fc_a_units)
-        self.fc_z_a = nn.Linear(fc_a_units, action_size)
-
-        self.fc_h_v = nn.Linear(fc2_units, fc_v_units)
-        self.fc_z_v = nn.Linear(fc_v_units, 1)
-
-    def forward(self, state):
-        x = F.relu(self.fc1(state))
-        x = F.relu(self.fc2(x))
-
-        v = F.relu(self.fc_h_v(x))
-        v = self.fc_z_v(v)
-
-        a = F.relu(self.fc_h_a(x))
-        a = self.fc_z_a(a)
-
-        q = v + a - a.mean()
-        return q
+```
+----------------------------------------------------------------
+        Layer (type)               Output Shape         Param #
+================================================================
+            Linear-1              [-1, 256, 64]           2,432
+            Linear-2              [-1, 256, 64]           4,160
+            Linear-3              [-1, 256, 32]           2,080
+            Linear-4               [-1, 256, 1]              33
+            Linear-5              [-1, 256, 32]           2,080
+            Linear-6               [-1, 256, 4]             132
+================================================================
+Total params: 10,917
+Trainable params: 10,917
+Non-trainable params: 0
+----------------------------------------------------------------
+Input size (MB): 0.04
+Forward/backward pass size (MB): 0.38
+Params size (MB): 0.04
+Estimated Total Size (MB): 0.46
+----------------------------------------------------------------
 ```
 
 ### Prioritized Experience Replay [DRAFT]
@@ -148,21 +133,21 @@ Prioritized Experience Replay [PER] is modification of DQN that changes the way 
 Here's the change to Experience buffer. We assign sampling probabilities proportional to priorities.
 
 ```python
-    def get_probabilities_from_priorities(self):
-        priorities = np.array(
-            [e.priority for e in self.memory if e is not None])
-        scaled_priorities = (priorities + self.epsilon)**self.alpha
-        return scaled_priorities / np.sum(scaled_priorities)
+def get_probabilities_from_priorities(self):
+    priorities = np.array(
+        [e.priority for e in self.memory if e is not None])
+    scaled_priorities = (priorities + self.epsilon)**self.alpha
+    return scaled_priorities / np.sum(scaled_priorities)
 
-    def sample(self):
-        probabilities = self.get_probabilities_from_priorities()
-        idxs = np.random.choice(
-            np.arange(0, len(self.memory)), self.batch_size, p=probabilities)
-        experiences = []
-        for j, i in enumerate(idxs):
-            self.memory[i].probability = probabilities[j]
-            experiences.append(self.memory[i])
-        ...
+def sample(self):
+    probabilities = self.get_probabilities_from_priorities()
+    idxs = np.random.choice(
+        np.arange(0, len(self.memory)), self.batch_size, p=probabilities)
+    experiences = []
+    for j, i in enumerate(idxs):
+        self.memory[i].probability = probabilities[j]
+        experiences.append(self.memory[i])
+    ...
 ```
 
 Here's how we assign priorities to experience samples in ```Agent.learn``` function.
@@ -232,7 +217,7 @@ BUFFER_SIZE = int(1e5)  # replay buffer size
 BATCH_SIZE = 128        # minibatch size
 GAMMA = 0.99            # discount factor
 TAU = 1e-3              # for soft update of target parameters
-LR = 5e-4               # learning rate
+LR = 0.001               # learning rate
 UPDATE_EVERY = 4        # how often to update the network
 ```
 
