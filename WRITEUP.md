@@ -166,7 +166,13 @@ if self.priority_replay:
 
 **State augmentation**
 
-Learning from pixels model must learn state space from raw pixels. Previous state space included velocity and acceleration, the dynamic parameters of an agent. To learn them we have to augment raw pixel state space:
+In this variation of the task we are only given partially-observable state space which is raw pixels from agent's view perspective. This is example of Partially observable Markov decision process in which system dynamics are determined by an MDP but agent can't observe full state space. 
+
+In order to 'hack' this problem with DQN implementation defined for previous flavor we can augment state space to capture more latent data. By merging 3 consecutive frames and actions we can force NN to learn more data that from just single frame.
+
+In experiment with observation space defined as a single frame average rewards per 100 episodes oscillated around. With augmentation trick I was able to get to score of 3.
+
+**this section will be updated with recent updates to DQN for Partially observable Markov decision processes** 
 
 ```python
 def augment_state(frames, actions):
