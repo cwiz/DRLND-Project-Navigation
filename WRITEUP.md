@@ -227,14 +227,19 @@ LR = 5e-4               # learning rate
 UPDATE_EVERY = 4        # how often to update the network
 ```
 
+#### DQN Variants Comparison over 100-episode Averages
 
 ![results-summary-1](https://github.com/cwiz/DRLND-Project-Navigation/blob/master/images/results-state-1.png?raw=true "DQN")
+
+#### Rewards-per-Episode Plots
 
 * [Vanilla DQN Rewards-Per-Episode](https://github.com/cwiz/DRLND-Project-Navigation/blob/master/images/variant-1.png)
 * [Double DQN Rewards-Per-Episode](https://github.com/cwiz/DRLND-Project-Navigation/blob/master/images/variant-2.png)
 * [Dueling DQN Rewards-Per-Episode](https://github.com/cwiz/DRLND-Project-Navigation/blob/master/images/variant-2.png)
 
 ### Learning from raw pixels 
+
+#### Rewards-per-Episode
 
 ```
 Episode 100	Average Score: 0.29
@@ -276,7 +281,7 @@ Episode 3000	Average Score: 3.50
 
 [1] [V Mnih et al. *Human-level control through deep reinforcement
 learning*, Nature 518 529-533, 2015](https://storage.googleapis.com/deepmind-media/dqn/DQNNaturePaper.pdf)
-
+<br />
 [2] [Hado et al. *Deep Reinforcement Learning with Double Q-learning*, Arxiv, 2015](https://arxiv.org/abs/1509.06461)
-
+<br />
 [3] [Ziyu el al. *Dueling Network Architectures for Deep Reinforcement Learning*, Arxiv, 2015](https://arxiv.org/abs/1511.06581)
