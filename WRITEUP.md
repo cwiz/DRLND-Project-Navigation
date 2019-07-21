@@ -1,4 +1,4 @@
-# Project 1: Navigation [DRAFT]
+# Project 1: Navigation
 
 **Sergei Surovtsev**
 <br/>
@@ -124,7 +124,7 @@ Estimated Total Size (MB): 0.46
 ----------------------------------------------------------------
 ```
 
-### Prioritized Experience Replay [DRAFT]
+### Prioritized Experience Replay
 
 **TODO: Check correctness**
 
@@ -208,7 +208,13 @@ Estimated Total Size (MB): 20.07
 ----------------------------------------------------------------
 ```
 
-## Hyperparameters
+## Results
+
+Requirement for passing solution is getting average score over 100 episodes above 13 under 2000 episodes of training. Refer to Navigation.ipynb for details of implementation.
+
+### Learning from ray-cast perception state-vector
+
+#### Hyperparameters
 
 Current project was evaluated with following hyperparameters. Adam was used as gradient descent flavor. 
 
@@ -217,18 +223,12 @@ BUFFER_SIZE = int(1e5)  # replay buffer size
 BATCH_SIZE = 128        # minibatch size
 GAMMA = 0.99            # discount factor
 TAU = 1e-3              # for soft update of target parameters
-LR = 0.001               # learning rate
+LR = 5e-4               # learning rate
 UPDATE_EVERY = 4        # how often to update the network
 ```
 
 
-## Results
-
-Requirement for passing solution is getting average score over 100 episodes above 13 under 2000 episodes of training. Refer to Navigation.ipynb for details of implementation.
-
-### Learning from ray-cast perception state-vector
-
-![segmentation-obstacles](https://github.com/cwiz/DRLND-Project-Navigation/blob/master/images/results-state-1.png?raw=true "DQN")
+![results-summary-1](https://github.com/cwiz/DRLND-Project-Navigation/blob/master/images/results-state-1.png?raw=true "DQN")
 
 * [Vanilla DQN Rewards-Per-Episode](https://github.com/cwiz/DRLND-Project-Navigation/blob/master/images/variant-1.png)
 * [Double DQN Rewards-Per-Episode](https://github.com/cwiz/DRLND-Project-Navigation/blob/master/images/variant-2.png)
